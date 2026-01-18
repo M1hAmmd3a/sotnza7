@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>صوت نازحي مخيم نور شمس</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #0a0a0a;
+            color: #e0e0e0;
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        .top-bar {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 2px solid #d4af37;
+        }
+
+        .logo {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #d4af37;
+        }
+
+        .problems-btn {
+            background: linear-gradient(135deg, #d4af37 0%, #f4d03f 100%);
+            color: #000;
+            border: none;
+            padding: 12px 25px;
+            font-size: 1rem;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 700;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+        }
+
+        .problems-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 25px rgba(212, 175, 55, 0.5);
+        }
+
+        .hero-section {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            padding: 80px 20px;
+            text-align: center;
+            border-bottom: 3px solid #d4af37;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+            animation: fadeIn 1.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 900;
+            color: #d4af37;
+            margin-bottom: 20px;
+            text-shadow: 0 0 30px rgba(212, 175, 55, 0.5);
+            letter-spacing: 2px;
+        }
+
+        .hero-subtitle {
+            font-size: 1.4rem;
+            color: #fff;
+            margin-bottom: 15px;
+            line-height: 1.8;
+        }
+
+        .about-section {
+            background: #1a1a1a;
+            padding: 50px 20px;
+            border-bottom: 1px solid #333;
+        }
+
+        .about-content {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .about-title {
+            font-size: 2rem;
+            color: #d4af37;
+            margin-bottom: 25px;
+            text-align: center;
+            font-weight: 700;
+        }
+
+        .about-text {
+            font-size: 1.2rem;
+            color: #c0c0c0;
+            line-height: 2;
+            text-align: center;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 60px 20px;
+        }
+
+        .form-section {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            padding: 50px;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
+            border: 1px solid #333;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            color: #d4af37;
+            margin-bottom: 30px;
+            text-align: center;
+            font-weight: 700;
+            text-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
+        }
+
+        .form-group {
+            margin-bottom: 30px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: #d4af37;
+            font-size: 1.1rem;
+        }
+
+        input[type="text"],
+        textarea {
+            width: 100%;
+            padding: 15px 20px;
+            background: #0a0a0a;
+            border: 2px solid #444;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-family: inherit;
+            color: #e0e0e0;
+            transition: all 0.3s;
+        }
+
+        input[type="text"]:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #d4af37;
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
+        }
+
+        textarea {
+            min-height: 180px;
+            resize: vertical;
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, #d4af37 0%, #f4d03f 100%);
+            color: #000;
+            border: none;
+            padding: 18px 50px;
+            font-size: 1.2rem;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: 700;
+            transition: all 0.3s;
+            width: 100%;
+            box-shadow: 0 6px 30px rgba(212, 175, 55, 0.4);
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 40px rgba(212, 175, 55, 0.6);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.3s ease-in;
+            overflow-y: auto;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            padding: 60px;
+            border-radius: 20px;
+            max-width: 1400px;
+            width: 95%;
+            border: 2px solid #d4af37;
+            box-shadow: 0 0 50px rgba(212, 175, 55, 0.5);
+            position: relative;
+            margin: 30px auto;
+            max-height: 95vh;
+            overflow-y: auto;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: #d4af37;
+            color: #000;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            cursor: pointer;
+            font-weight: 700;
+            transition: all 0.3s;
+        }
+
+        .close-btn:hover {
+            transform: rotate(90deg);
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.7);
+        }
+
+        .modal-title {
+            color: #d4af37;
+            font-size: 2.8rem;
+            margin-bottom: 40px;
+            text-align: center;
+            font-weight: 700;
+            text-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
+        }
+
+        .problem-card {
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+            border-right: 5px solid #d4af37;
+            padding: 40px;
+            margin-bottom: 30px;
+            border-radius: 15px;
+            transition: all 0.3s;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.5);
+            animation: slideIn 0.5s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .problem-card:hover {
+            transform: translateX(-10px);
+            box-shadow: 0 10px 40px rgba(212, 175, 55, 0.3);
+            border-right-width: 8px;
+        }
+
+        .problem-name {
+            font-weight: 700;
+            color: #d4af37;
+            font-size: 1.6rem;
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px rgba(212, 175, 55, 0.2);
+        }
+
+        .problem-text {
+            color: #c0c0c0;
+            font-size: 1.3rem;
+            line-height: 2;
+        }
+
+        .no-problems {
+            text-align: center;
+            color: #999;
+            font-size: 1.3rem;
+            padding: 60px 20px;
+        }
+
+        .success-message {
+            background: linear-gradient(135deg, #1a4d1a 0%, #2d6b2d 100%);
+            color: #90ee90;
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+            border: 2px solid #90ee90;
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1.1rem;
+            }
+
+            .form-section {
+                padding: 30px 20px;
+            }
+
+            .top-bar {
+                padding: 15px 20px;
+            }
+
+            .logo {
+                font-size: 1.1rem;
+            }
+
+            .problems-btn {
+                padding: 10px 20px;
+                font-size: 0.9rem;
+            }
+
+            .modal-content {
+                padding: 30px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="top-bar">
+        <div class="logo">🕊️ نور شمس</div>
+        <button class="problems-btn" id="viewProblemsBtn">المشاكل المعروضة</button>
+    </div>
+
+    <div class="hero-section">
+        <div class="hero-content">
+            <h1 class="hero-title">صوت نازحي مخيم نور شمس</h1>
+            <p class="hero-subtitle">منصة إنسانية لإيصال معاناة النازحين ومشاكلهم إلى العالم</p>
+            <p class="hero-subtitle">صوتك مهم ومعاناتك يجب أن تُسمع</p>
+        </div>
+    </div>
+
+    <div class="about-section">
+        <div class="about-content">
+            <h2 class="about-title">عن الموقع</h2>
+            <p class="about-text">
+              للعلم الموقع يعرض مشكلتك امام الناس جميعة في عرض المشاكل فوق في الشمال اذا لا تريد عرض للتنبيه فقط 
+            </p>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="form-section">
+            <h2 class="section-title">شارك معاناتك</h2>
+            <div id="successMessage" class="success-message">
+                ✓ تم إرسال المشكلة بنجاح
+            </div>
+            <form id="problemForm">
+                <div class="form-group">
+                    <label for="name">الاسم *</label>
+                    <input type="text" id="name" name="name" required placeholder="أدخل اسمك">
+                </div>
+
+                <div class="form-group">
+                    <label for="problem">المشكلة أو المعاناة *</label>
+                    <textarea id="problem" name="problem" required placeholder="اكتب مشكلتك أو معاناتك هنا..."></textarea>
+                </div>
+
+                <button type="submit" class="submit-btn">إرسال المشكلة</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="problemsModal" class="modal">
+        <div class="modal-content">
+            <button class="close-btn" id="closeModalBtn">×</button>
+            <h2 class="modal-title">المشاكل والمعاناة المُرسلة</h2>
+            <div id="problemsList">
+                <p class="no-problems">لا توجد مشاكل مُرسلة بعد</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Array to store problems in memory
+        let problems = [];
+
+        // Function to escape HTML to prevent XSS
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Function to display all problems
+        function displayProblems() {
+            const problemsList = document.getElementById('problemsList');
+            problemsList.innerHTML = '';
+
+            if (problems.length === 0) {
+                problemsList.innerHTML = '<p class="no-problems">لا توجد مشاكل مُرسلة بعد</p>';
+                return;
+            }
+
+            problems.forEach((item, index) => {
+                const card = document.createElement('div');
+                card.className = 'problem-card';
+                card.style.animationDelay = `${index * 0.1}s`;
+                
+                card.innerHTML = `
+                    <div class="problem-name">${escapeHtml(item.name)}</div>
+                    <div class="problem-text">${escapeHtml(item.problem)}</div>
+                `;
+                
+                problemsList.appendChild(card);
+            });
+        }
+
+        // Function to open modal
+        function openModal() {
+            const modal = document.getElementById('problemsModal');
+            modal.style.display = 'flex';
+            displayProblems();
+        }
+
+        // Function to close modal
+        function closeModal() {
+            const modal = document.getElementById('problemsModal');
+            modal.style.display = 'none';
+        }
+
+        // Function to show success message
+        function showSuccessMessage() {
+            const successMsg = document.getElementById('successMessage');
+            successMsg.style.display = 'block';
+            setTimeout(() => {
+                successMsg.style.display = 'none';
+            }, 3000);
+        }
+
+        // Event listener for form submission
+        document.getElementById('problemForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const nameInput = document.getElementById('name');
+            const problemInput = document.getElementById('problem');
+            
+            const name = nameInput.value.trim();
+            const problem = problemInput.value.trim();
+
+            if (name && problem) {
+                // Add problem to the beginning of array
+                problems.unshift({ 
+                    name: name, 
+                    problem: problem,
+                    timestamp: new Date().toISOString()
+                });
+                
+                // Clear form inputs
+                nameInput.value = '';
+                problemInput.value = '';
+                
+                // Show success message
+                showSuccessMessage();
+                
+                // Open modal to show the submitted problem
+                setTimeout(() => {
+                    openModal();
+                }, 500);
+            }
+        });
+
+        // Event listener for view problems button
+        document.getElementById('viewProblemsBtn').addEventListener('click', function() {
+            openModal();
+        });
+
+        // Event listener for close button
+        document.getElementById('closeModalBtn').addEventListener('click', function() {
+            closeModal();
+        });
+
+        // Close modal when clicking outside of it
+        window.addEventListener('click', function(event) {
+            const modal = document.getElementById('problemsModal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        });
+
+        // Close modal with Escape key
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closeModal();
+            }
+        });
+    </script>
+</body>
+</html>
