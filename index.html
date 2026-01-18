@@ -463,9 +463,18 @@
 
     <div class="about-section">
         <div class="about-content">
-            <h2 class="about-title">عن الموقع</h2>
+            <h2 class="about-title">كيف يعمل الموقع؟</h2>
             <p class="about-text">
-                يعاني النازحون من مخيم نور شمس من ظروف إنسانية صعبة للغاية. فقدوا منازلهم وممتلكاتهم، ويواجهون نقصاً حاداً في المأوى الآمن والغذاء والماء النظيف والرعاية الصحية. الأطفال محرومون من التعليم، والعائلات تعيش في خيام غير آمنة تحت ظروف جوية قاسية. هذه المنصة تهدف لإيصال أصواتهم ومعاناتهم للعالم أجمع.
+                📝 <strong>شارك مشكلتك:</strong> اكتب اسمك ومشكلتك في النموذج أدناه واضغط "إرسال المشكلة"
+            </p>
+            <p class="about-text">
+                👁️ <strong>الجميع يراها:</strong> جميع المشاكل المُرسلة تُحفظ في قاعدة البيانات ويمكن لأي شخص مشاهدتها
+            </p>
+            <p class="about-text">
+                🌍 <strong>إيصال صوتك:</strong> مشكلتك ستظهر في صفحة "المشاكل المعروضة" للعالم أجمع
+            </p>
+            <p class="about-text">
+                ✏️ <strong>يمكنك التعديل:</strong> بعد إرسال مشكلتك، يمكنك تعديلها أو حذفها في أي وقت
             </p>
         </div>
     </div>
@@ -649,37 +658,37 @@
         document.getElementById('problemForm').addEventListener('submit', async function(e) {
             e.preventDefault();
 
-            const nameInput = document.getElementById('name');
-            const problemInput = document.getElementById('problem');
-            
-            const name = nameInput.value.trim();
-            const problem = problemInput.value.trim();
+            const name = document.getElementById('name').value.trim();
+            const problem = document.getElementById('problem').value.trim();
 
-            if (!name || !problem) return;
+            if (!name || !problem) return alert("الرجاء ملء جميع الحقول");
 
             try {
-                const response = await fetch(`${API_URL}/problems`, {
+                const response = await fetch('http://localhost:3000/api/problems', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ name, problem })
                 });
 
-                if (!response.ok) throw new Error('فشل في إرسال المشكلة');
+                const data = await response.json();
+                console.log('تم إضافة المشكلة:', data);
 
-                // Clear form inputs
-                nameInput.value = '';
-                problemInput.value = '';
+                // تحديث العرض في النافذة المنبثقة
+                const problemsList = document.getElementById('problemsList');
+                const card = document.createElement('div');
+                card.className = 'problem-card';
+                card.innerHTML = `<div class="problem-name">${escapeHtml(name)}</div><div class="problem-text">${escapeHtml(problem)}</div>`;
+                problemsList.prepend(card);
+
+                this.reset();
                 
                 // Show success message
                 showSuccessMessage();
                 
-                // Open modal to show the submitted problem
-                setTimeout(() => {
-                    openModal();
-                }, 500);
-            } catch (error) {
-                console.error('خطأ في الإرسال:', error);
-                alert('حدث خطأ أثناء إرسال المشكلة. الرجاء المحاولة مرة أخرى.');
+                alert("تم إرسال المشكلة بنجاح!");
+            } catch (err) {
+                console.error(err);
+                alert("حدث خطأ أثناء إرسال المشكلة");
             }
         });
 
