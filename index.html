@@ -465,7 +465,7 @@
         <div class="about-content">
             <h2 class="about-title">عن الموقع</h2>
             <p class="about-text">
-               للعلم الموقع يعرض مشكلتك امام الناس جميعة في عرض المشاكل فوق في الشمال اذا لا تريد عرض للتنبيه فقط
+                يعاني النازحون من مخيم نور شمس من ظروف إنسانية صعبة للغاية. فقدوا منازلهم وممتلكاتهم، ويواجهون نقصاً حاداً في المأوى الآمن والغذاء والماء النظيف والرعاية الصحية. الأطفال محرومون من التعليم، والعائلات تعيش في خيام غير آمنة تحت ظروف جوية قاسية. هذه المنصة تهدف لإيصال أصواتهم ومعاناتهم للعالم أجمع.
             </p>
         </div>
     </div>
@@ -503,8 +503,8 @@
     </div>
 
     <script>
-        // Array to store problems in memory
-        let problems = [];
+        // API Base URL - غير هذا الرابط إلى رابط السيرفر الخاص بك
+        const API_URL = 'http://localhost:3000/api';
 
         // Function to escape HTML to prevent XSS
         function escapeHtml(text) {
@@ -513,9 +513,26 @@
             return div.innerHTML;
         }
 
+        // Function to fetch all problems from server
+        async function fetchProblems() {
+            try {
+                const response = await fetch(`${API_URL}/problems`);
+                if (!response.ok) throw new Error('فشل في جلب البيانات');
+                const data = await response.json();
+                return data;
+            } catch (error) {
+                console.error('خطأ في جلب المشاكل:', error);
+                return [];
+            }
+        }
+
         // Function to display all problems
-        function displayProblems() {
+        async function displayProblems() {
             const problemsList = document.getElementById('problemsList');
+            problemsList.innerHTML = '<p class="no-problems">جاري التحميل...</p>';
+
+            const problems = await fetchProblems();
+
             problemsList.innerHTML = '';
 
             if (problems.length === 0) {
@@ -527,21 +544,20 @@
                 const card = document.createElement('div');
                 card.className = 'problem-card';
                 card.style.animationDelay = `${index * 0.1}s`;
-                card.setAttribute('data-index', index);
                 
                 card.innerHTML = `
                     <div class="problem-name">${escapeHtml(item.name)}</div>
                     <div class="problem-text">${escapeHtml(item.problem)}</div>
                     <div class="button-group">
-                        <button class="edit-btn" onclick="editProblem(${index})">✏️ تعديل</button>
-                        <button class="delete-btn" onclick="deleteProblem(${index})">🗑️ حذف</button>
+                        <button class="edit-btn" onclick="editProblem(${item.id})">✏️ تعديل</button>
+                        <button class="delete-btn" onclick="deleteProblem(${item.id})">🗑️ حذف</button>
                     </div>
-                    <div class="edit-form" id="edit-form-${index}">
-                        <input type="text" id="edit-name-${index}" value="${escapeHtml(item.name)}" placeholder="الاسم">
-                        <textarea id="edit-problem-${index}" placeholder="المشكلة">${escapeHtml(item.problem)}</textarea>
+                    <div class="edit-form" id="edit-form-${item.id}">
+                        <input type="text" id="edit-name-${item.id}" value="${escapeHtml(item.name)}" placeholder="الاسم">
+                        <textarea id="edit-problem-${item.id}" placeholder="المشكلة">${escapeHtml(item.problem)}</textarea>
                         <div class="button-group">
-                            <button class="save-btn" onclick="saveProblem(${index})">💾 حفظ التعديلات</button>
-                            <button class="cancel-btn" onclick="cancelEdit(${index})">❌ إلغاء</button>
+                            <button class="save-btn" onclick="saveProblem(${item.id})">💾 حفظ التعديلات</button>
+                            <button class="cancel-btn" onclick="cancelEdit(${item.id})">❌ إلغاء</button>
                         </div>
                     </div>
                 `;
@@ -551,47 +567,67 @@
         }
 
         // Function to edit a problem
-        function editProblem(index) {
-            const editForm = document.getElementById(`edit-form-${index}`);
+        function editProblem(id) {
+            const editForm = document.getElementById(`edit-form-${id}`);
             editForm.style.display = 'block';
         }
 
         // Function to save edited problem
-        function saveProblem(index) {
-            const newName = document.getElementById(`edit-name-${index}`).value.trim();
-            const newProblem = document.getElementById(`edit-problem-${index}`).value.trim();
+        async function saveProblem(id) {
+            const newName = document.getElementById(`edit-name-${id}`).value.trim();
+            const newProblem = document.getElementById(`edit-problem-${id}`).value.trim();
 
-            if (newName && newProblem) {
-                problems[index].name = newName;
-                problems[index].problem = newProblem;
-                problems[index].edited = true;
-                problems[index].editedAt = new Date().toISOString();
-                displayProblems();
-                showSuccessMessage();
-            } else {
+            if (!newName || !newProblem) {
                 alert('الرجاء ملء جميع الحقول');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_URL}/problems/${id}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name: newName, problem: newProblem })
+                });
+
+                if (!response.ok) throw new Error('فشل في تحديث المشكلة');
+
+                await displayProblems();
+                showSuccessMessage();
+            } catch (error) {
+                console.error('خطأ في التحديث:', error);
+                alert('حدث خطأ أثناء التحديث. الرجاء المحاولة مرة أخرى.');
             }
         }
 
         // Function to cancel editing
-        function cancelEdit(index) {
-            const editForm = document.getElementById(`edit-form-${index}`);
+        function cancelEdit(id) {
+            const editForm = document.getElementById(`edit-form-${id}`);
             editForm.style.display = 'none';
         }
 
         // Function to delete a problem
-        function deleteProblem(index) {
-            if (confirm('هل أنت متأكد من حذف هذه المشكلة؟')) {
-                problems.splice(index, 1);
-                displayProblems();
+        async function deleteProblem(id) {
+            if (!confirm('هل أنت متأكد من حذف هذه المشكلة؟')) return;
+
+            try {
+                const response = await fetch(`${API_URL}/problems/${id}`, {
+                    method: 'DELETE'
+                });
+
+                if (!response.ok) throw new Error('فشل في حذف المشكلة');
+
+                await displayProblems();
+            } catch (error) {
+                console.error('خطأ في الحذف:', error);
+                alert('حدث خطأ أثناء الحذف. الرجاء المحاولة مرة أخرى.');
             }
         }
 
         // Function to open modal
-        function openModal() {
+        async function openModal() {
             const modal = document.getElementById('problemsModal');
             modal.style.display = 'flex';
-            displayProblems();
+            await displayProblems();
         }
 
         // Function to close modal
@@ -610,7 +646,7 @@
         }
 
         // Event listener for form submission
-        document.getElementById('problemForm').addEventListener('submit', function(e) {
+        document.getElementById('problemForm').addEventListener('submit', async function(e) {
             e.preventDefault();
 
             const nameInput = document.getElementById('name');
@@ -619,14 +655,17 @@
             const name = nameInput.value.trim();
             const problem = problemInput.value.trim();
 
-            if (name && problem) {
-                // Add problem to the beginning of array
-                problems.unshift({ 
-                    name: name, 
-                    problem: problem,
-                    timestamp: new Date().toISOString()
+            if (!name || !problem) return;
+
+            try {
+                const response = await fetch(`${API_URL}/problems`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, problem })
                 });
-                
+
+                if (!response.ok) throw new Error('فشل في إرسال المشكلة');
+
                 // Clear form inputs
                 nameInput.value = '';
                 problemInput.value = '';
@@ -638,6 +677,9 @@
                 setTimeout(() => {
                     openModal();
                 }, 500);
+            } catch (error) {
+                console.error('خطأ في الإرسال:', error);
+                alert('حدث خطأ أثناء إرسال المشكلة. الرجاء المحاولة مرة أخرى.');
             }
         });
 
